@@ -51,6 +51,38 @@ export const createPin = async(req, res) => {
     });
 };
 
+export const deposit = (req, res) => {
+    const {amount} = res.body;
+
+    if(!amount) {
+        return res.status(400).json({
+            message: "Amount is required"
+        });
+    }
+
+    if(amount <= 0){
+        return res.status(400).json({
+            message: "Amount must be greater than zero"
+        });
+    }
+
+    const user = users.find(user => user.id === req.userId);
+
+    if(!user){
+        return res.status(404).json({
+            message: "User not found"
+        });
+    }
+
+    user.balance += Number(amount);
+
+    res.json({
+        message: "Deposit successful",
+        deposited: Number(amount),
+        balance: user.balance
+    });
+};
+
 export const updatePin = async(req, res) => {
     const {oldpin, newpin} = req.body;
 
