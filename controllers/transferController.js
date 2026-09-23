@@ -3,9 +3,9 @@ import users from '../data/users.js';
 
 export const transferMoney = async (req, res) => {
     try {
-        const { recipientId, amount, pin } = req.body;
+        const { recipientId, amount, pin, accountNumber } = req.body;
 
-        if (!recipientId || !amount || !pin) {
+        if (!recipientId || !amount || !pin || !accountNumber) {
             return res.status(400).json({
                 message: "All fields are required"
             });
@@ -15,8 +15,15 @@ export const transferMoney = async (req, res) => {
 
         if (!sender) {
             return res.status(404).json({
-                message: "Sender noo found"
+                message: "Sender not found"
             });
+        }
+        const accountNumberMatch = users.find(user => user.accountNumber === Number(accountNumber))
+
+        if(!accountNumberMatch){
+            return res.status(400).json({
+                message: "Incorrect account number"
+            })
         }
 
         const recipient = users.find(user => user.id === Number(recipientId)
@@ -59,6 +66,7 @@ export const transferMoney = async (req, res) => {
                 message: "Incorrect PIN"
             });
         }
+
 
         sender.balance -= Number(amount);
         recipient.balance += Number(amount);

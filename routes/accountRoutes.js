@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get("/balance", authMiddleware, getBalance);
 router.post("/pin", authMiddleware, createPin);
-router.patch("/pin", authMiddleware, updatePin);
+router.patch("/updatepin", authMiddleware, updatePin);
 router.post("/deposit", authMiddleware, deposit);
 
 export default router;

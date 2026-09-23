@@ -2,9 +2,25 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import users from '../data/users.js';
 
+const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const validPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{6,}$/;
+
+if(!validEmail.test(email)){
+    return res.status(400).json({
+        message: "Invalid email format"
+    })
+}
+
+if(!validPassword.test(password)){
+    return res.status(400).json({
+        message: "Password must be at least 6 characters and contain an uppercase letter, lowercase letter, number and special character"
+
+    })
+}
 
 export const register = async (req, res) => {
     try {
+
         const { name, email, password } = req.body;
 
         if (!name || !email || !password) {
@@ -12,6 +28,7 @@ export const register = async (req, res) => {
                 message: "All fiels are required"
             });
         }
+
 
 
         const estinguisher = users.find(user => user.email === email);
@@ -64,6 +81,8 @@ export const login = async (req, res) => {
                 message: "Invalid email"
             });
         }
+
+        
 
         const passwordMatch = await bcrypt.compare(
             password,
