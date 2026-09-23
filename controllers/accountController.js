@@ -52,13 +52,15 @@ export const createPin = async(req, res) => {
 };
 
 export const deposit = (req, res) => {
-    const {amount} = res.body;
+    const {amount, role} = req.body;
 
     if(!amount) {
         return res.status(400).json({
             message: "Amount is required"
         });
     }
+
+    
 
     if(amount <= 0){
         return res.status(400).json({
@@ -87,6 +89,12 @@ export const updatePin = async(req, res) => {
     const {oldpin, newpin} = req.body;
 
     const user = users.find(user => user.id === req.userId);
+
+    if(oldpin === newpin){
+        return res.status(400).json({
+            message:"New PIN must be different from old PIN"
+        })
+    }
 
     if(!user){
         return res.status(404).json({
