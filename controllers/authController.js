@@ -14,7 +14,7 @@ export const register = async (req, res) => {
             });
         }
 
-        const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const validEmail = /^[a-z]+@[^\s@]+\.[^\s@]+$/;
         const validPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{6,}$/;
 
         if (!validEmail.test(email)) {
@@ -47,7 +47,7 @@ export const register = async (req, res) => {
             accountNumber: Math.floor(1000000000 + Math.random() * 9000000000),
             name,
             email,
-            role: "user",
+            role,
             password: hashed,
             balance: 100,
             pin: null
@@ -63,8 +63,7 @@ export const register = async (req, res) => {
                 id: newUser.id,
                 name: newUser.name,
                 email: newUser.email,
-                balance: newUser.balance,
-                role: newUser.role
+                balance: newUser.balance
             }
         });
     } catch (e) {

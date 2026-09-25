@@ -1,4 +1,4 @@
-import users from "../data/users";
+import users from "../data/users.js";
 
 const adminMiddlware = (req, res, next) => {
     const user = users.find(user => user.id === req.userId);

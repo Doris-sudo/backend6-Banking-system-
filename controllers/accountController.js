@@ -51,8 +51,10 @@ export const createPin = async(req, res) => {
     });
 };
 
-export const deposit = (req, res) => {
-    const {amount, role} = req.body;
+export const deposit = async(req, res) => {
+
+    
+    const {amount, pin, role} = req.body;
 
     if(!amount) {
         return res.status(400).json({
@@ -76,6 +78,13 @@ export const deposit = (req, res) => {
         });
     }
 
+    
+    if(role !== "admin"){
+        return res.status(400).json({
+            message: "You are not eligible for this activity"
+        })
+    }
+
     user.balance += Number(amount);
 
     res.json({
@@ -83,6 +92,14 @@ export const deposit = (req, res) => {
         deposited: Number(amount),
         balance: user.balance
     });
+
+    const pinMatch = await bcrypt.compare(oldpin, user.pin);
+
+    if(!pinMatch){
+        return res.status(401).json({
+            message: "Old PIN is incorrect"
+        });
+    }
 };
 
 export const updatePin = async(req, res) => {
